@@ -10,18 +10,18 @@ xap.require(
   "rmapshaper"
   )
 
-xl_sheets <- list.files("../../datafiles/") %>%
-  purrr::map(~paste0("../../datafiles/", .x)) %>%
-  purrr::map(~excel_sheets(.x))
+xl_sheets <- list.files("./datafiles/") %>%
+  map(~paste0("./datafiles/", .x)) %>%
+  map(~excel_sheets(.x))
 
 map_gsdf <- readOGR( 
-  dsn= "../../map_data/Strategic_Clinical_Networks_December_2016_Full_Clipped_Boundaries_in_England(simplified).shp", 
+  dsn= "./map_data/Strategic_Clinical_Networks_December_2016_Full_Clipped_Boundaries_in_England(simplified).shp", 
   layer="Strategic_Clinical_Networks_December_2016_Full_Clipped_Boundaries_in_England(simplified)",
   GDAL1_integer64_policy = TRUE
 ) %>% 
   spTransform(., CRS("+proj=longlat +datum=WGS84 +no_defs"))
 
-get_row_rangesa <- function(file, sheet) {
+get_row_ranges <- function(file, sheet) {
   col <- read_excel(file, sheet, col_names = FALSE) %>% pull(2)
   starts <- grep("ODS CODE", col)
   possible_ends <- which(is.na(col))
@@ -99,7 +99,7 @@ read_rm_sheet <- function(file, sheet) {
   starts <- get_row_ranges(file, sheet)$starts
   
   # Read all table ranges and combine
-  df <- ranges %>% purrr::map(~read_excel(file, sheet, range = .)) %>%
+  df <- ranges %>% map(~read_excel(file, sheet, range = .)) %>%
     bind_rows()
   
   # remove empty columns
@@ -124,8 +124,8 @@ read_rm_sheet <- function(file, sheet) {
   names(df)[unnamed_col] <- perc_name
   df[[perc_name]] <- df[[perc_name]] * 100
   
-  df$source_file <- substr(file, 17, nchar(file))
-  df$time_period <- substr(file, 17, 28)
+  df$source_file <- substr(file, 13, nchar(file))
+  df$time_period <- substr(file, 13, 24)
   
   # sanitise names
   names(df) <- sanitise_names_rm(names(df))
@@ -134,10 +134,10 @@ read_rm_sheet <- function(file, sheet) {
 }
 
 
-# q1_file <- "../../datafiles/Q1-2015-2016-CANCER-WAITING-TIMES-PROVIDER-WORKBOOK.xlsx"
-# q1_sheets <- tidyxl::xlsx_sheet_names(q1_file)[-1]
-# 
-# q1_tables <- q1_sheets %>% purrr::map(~read_rm_sheet(q1_file, .))
-# 
-# ons_area_id_lookup <- q1_tables %>% purrr::map(~ .[, 1:2]) %>% purrr::map(`names<-`, c("ons_area_id", "ods_code")) %>%
-#  bind_rows() %>% unique()
+q1_file <- "./datafiles/Q1-2015-2016-CANCER-WAITING-TIMES-PROVIDER-WORKBOOK.xlsx"
+q1_sheets <- tidyxl::xlsx_sheet_names(q1_file)[-1]
+
+q1_tables <- q1_sheets %>% map(~read_rm_sheet(q1_file, .))
+
+ons_area_id_lookup <- q1_tables %>% map(~ .[, 1:2]) %>% map(`names<-`, c("ons_area_id", "ods_code")) %>%
+ bind_rows() %>% unique()

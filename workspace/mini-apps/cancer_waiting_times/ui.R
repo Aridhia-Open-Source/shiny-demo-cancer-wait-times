@@ -1,9 +1,8 @@
-source("global.R")
+#source("global.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   # Application title
-  #includeCSS("styles.css"),
   titlePanel("Cancer Waiting Times Stats"),
   
   # Sidebar with a slider input for number of bins 
@@ -13,12 +12,14 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.sheet != ''",
         selectizeInput('regions','Regions',choices = NULL, options = list(placeholder = 'select region', onInitialize = I('function() { this.setValue(""); }'))),
-        selectizeInput('quarter','Quarter',choices = NULL, options = list(placeholder = 'select quarter', onInitialize = I('function() { this.setValue(""); }'))),
-        conditionalPanel(
-          condition = "input.sheet.includes('BY CANCER')",
-          selectizeInput('cancerType','Cancer Type',choices = NULL, options = list(placeholder = 'select cancer type', onInitialize = I('function() { this.setValue(""); }')))
-          
-        )
+        
+        # conditionalPanel(
+        #   condition = "input.sheet.includes('BY CANCER')",
+        #   selectizeInput('cancerType','Cancer Type',choices = NULL, options = list(placeholder = 'select cancer type', onInitialize = I('function() { this.setValue(""); }')))
+        #   
+        # ),
+        
+        selectizeInput('quarter','Quarter',choices = NULL, options = list(placeholder = 'select quarter', onInitialize = I('function() { this.setValue(""); }')))
       )
     ),
     
