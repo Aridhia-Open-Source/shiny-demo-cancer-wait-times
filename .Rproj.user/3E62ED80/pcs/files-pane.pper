@@ -1,0 +1,9 @@
+{
+    "path" : "~/cancer_waiting_times",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

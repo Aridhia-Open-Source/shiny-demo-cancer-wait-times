@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579866709220.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "79FCC9AC",
+    "lastKnownWriteTime" : 1582195880,
+    "last_content_update" : 1582195880867,
+    "path" : "~/cancer_waiting_times/workspace/mini-apps/clinical_dataset_library/ui.R",
+    "project_path" : "workspace/mini-apps/clinical_dataset_library/ui.R",
+    "properties" : {
+        "cursorPosition" : "18,36",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

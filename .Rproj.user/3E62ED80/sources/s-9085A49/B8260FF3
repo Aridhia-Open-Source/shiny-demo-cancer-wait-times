@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579866705253.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "23|42|31|0|\n33|41|40|0|\n42|43|50|0|\n52|37|60|0|\n62|34|68|0|\n70|37|77|0|\n79|44|82|0|\n84|27|94|0|\n96|40|133|0|\n",
+    "hash" : "2128953642",
+    "id" : "B8260FF3",
+    "lastKnownWriteTime" : 1582196927,
+    "last_content_update" : 1582196927679,
+    "path" : "~/cancer_waiting_times/workspace/mini-apps/clinical_dataset_library/global.R",
+    "project_path" : "workspace/mini-apps/clinical_dataset_library/global.R",
+    "properties" : {
+        "cursorPosition" : "95,0",
+        "scrollLine" : "11"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
