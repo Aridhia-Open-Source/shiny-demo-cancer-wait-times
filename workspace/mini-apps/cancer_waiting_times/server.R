@@ -6,6 +6,7 @@ server <- function(input, output, session) {
   dfs <- reactiveValues(merged = 0, by_area = 0, regions = 0)
   
   b <- leaflet(options = leafletOptions(minZoom = 5.7, maxZoom = 5.7)) %>%
+    addTiles() %>%
     addPolygons(data = map_gsdf, 
                 layerId= map_gsdf$scn16cd, 
                 color = "#444444", weight = 1, smoothFactor = 0.5,
@@ -57,13 +58,22 @@ server <- function(input, output, session) {
       
       map_gsdf@data$average <- as.factor(averages)
       
+      min <- round(min(averages),0) - 1
+      max <- round(max(averages),0) + 1
+      
+      pal <- colorNumeric(
+        palette = "Reds",
+        domain = min : max
+      )
+      
       b <- leaflet(options = leafletOptions(minZoom = 5.7, maxZoom = 5.7)) %>%
+        addTiles() %>%
         addPolygons(data = map_gsdf, 
                     layerId= map_gsdf$scn16cd, 
-                    color = "#444444", weight = 1, smoothFactor = 0.5,
+                    color = ~pal(averages), weight = 1, smoothFactor = 0.5,
                     popup = paste0("<b>",map_gsdf$scn16nm,"<br></b>", "<b>", percentage_name, ":</b><br>",map_gsdf$average, "</b>"),
-                    opacity = 1.0, fillOpacity = 0.5,
-                    highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE))
+                    opacity = 1.0, fillOpacity = 0.7,
+                    highlightOptions = highlightOptions(color = "black", weight = 2, bringToFront = TRUE))
       
       output$map <- renderLeaflet(b)
       
@@ -100,7 +110,11 @@ server <- function(input, output, session) {
         mutate (difference = average_time - nat_avg)
       
       p <- ggplot(data = average_diff, aes(x = ods_code , y =difference)) + 
-        geom_col()
+        geom_col(aes(fill = difference)) +
+        scale_fill_gradient2(low = "red",
+                             high = "green",
+                             midpoint = median(average_diff$difference))
+      
       output$plot <- renderPlot(p)
     }
   })
@@ -128,7 +142,11 @@ server <- function(input, output, session) {
           mutate (difference = average_time - nat_avg)
         
         p <- ggplot(data = average_diff, aes(x = ods_code , y =difference)) + 
-          geom_col()
+          geom_col(aes(fill = difference)) +
+          scale_fill_gradient2(low = "red",
+                               high = "green",
+                               midpoint = median(average_diff$difference))
+        
         output$plot <- renderPlot(p)
       }
     }
