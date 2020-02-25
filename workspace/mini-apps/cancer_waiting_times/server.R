@@ -3,7 +3,7 @@
 server <- function(input, output, session) {
   
   names(xl_sheets) <- list.files("./datafiles/")
-  dfs <- reactiveValues(merged = 0, by_area = 0, regions = 0, quarts = 0, types_of_canc = 0)
+  dfs <- reactiveValues(merged = 0, by_area = 0, regions = 0, quarts = 0, types_of_canc = 0, name = 0, nat_avg = 0)
   
   b <- leaflet(options = leafletOptions(minZoom = 5.6, maxZoom = 5.6)) %>%
     addTiles() %>%
@@ -78,6 +78,8 @@ server <- function(input, output, session) {
       
       legend_title <- str_replace_all(percentage_name,'_',' ') %>%
         str_replace_all(., 'percentage', '%')
+      
+      dfs$name <- legend_title
 
       b <- leaflet(options = leafletOptions(minZoom = 5.6, maxZoom = 5.6)) %>%
         addTiles() %>%
@@ -91,9 +93,13 @@ server <- function(input, output, session) {
                    opacity = 1
           
         )
+      
+      nat_avg <- (sum(merged[[which(names(merged)=='total')+1]]) / sum(merged$total)) * 100
+      dfs$nat_avg <- nat_avg
 
       output$map <- renderLeaflet(b)
-      
+      output$plot <- renderPlot({})
+      output$national_avg <- renderText({paste("<b> Overall national average of ",dfs$name, ": </b>",as.character(round(nat_avg, 2)), "%")})
       
       if (grepl("BY CANCER", input$sheet)){
         cancer_field <- names(merged)[[match('total',names(merged)) - 1]]
@@ -125,7 +131,7 @@ server <- function(input, output, session) {
       
       output$sheet <- DT::renderDataTable(tmp, options = list( targets = '_all'))
       
-      output$plot <- renderPlot(plots(tmp))
+      output$plot <- renderPlot(plots(tmp, dfs$name, dfs$nat_avg))
     }
   })
   
@@ -156,7 +162,7 @@ server <- function(input, output, session) {
         
         output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
         
-        output$plot <- renderPlot(plots(tmp))
+        output$plot <- renderPlot(plots(tmp, dfs$name, dfs$nat_avg))
       }
       
     }
@@ -189,7 +195,7 @@ server <- function(input, output, session) {
         
         output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
         
-        output$plot <- renderPlot(plots(tmp))
+        output$plot <- renderPlot(plots(tmp, dfs$name, dfs$nat_avg))
       }
     }
   })

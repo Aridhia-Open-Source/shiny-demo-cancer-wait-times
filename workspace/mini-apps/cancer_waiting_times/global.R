@@ -133,9 +133,10 @@ read_rm_sheet <- function(file, sheet) {
   return(df)
 }
 
-plots <- function(tmp){
+plots <- function(tmp, name, nat_avg){
   percentage_name <- names(tmp)[[match('total',names(tmp)) + 3]]
-  nat_avg <- (sum(tmp[[which(names(tmp)=='total')+1]]) / sum(tmp$total)) * 100
+  
+  # nat_avg <- (sum(tmp[[which(names(tmp)=='total')+1]]) / sum(tmp$total)) * 100
   
   average_diff <- tmp %>%
     group_by(ods_code) %>%
@@ -146,7 +147,9 @@ plots <- function(tmp){
     geom_col(aes(fill = difference)) +
     scale_fill_gradient2(low = "red",
                          high = "green",
-                         midpoint = median(average_diff$difference))
+                         midpoint = median(average_diff$difference)) +
+    ggtitle(paste("Difference of ", name, "between\nnational average and regional providers")) + 
+    theme(plot.title = element_text(lineheight=.8, hjust = 0.5, face="bold"))
   
   return(p)
 }

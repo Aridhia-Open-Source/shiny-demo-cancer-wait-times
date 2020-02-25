@@ -20,7 +20,8 @@ ui <- fluidPage(
         ),
         
         selectizeInput('quarter','Quarter',choices = NULL, options = list(placeholder = 'select quarter', onInitialize = I('function() { this.setValue(""); }')))
-      )
+      ),
+      htmlOutput("national_avg")
     ),
     
     # Show a plot of the generated distribution
