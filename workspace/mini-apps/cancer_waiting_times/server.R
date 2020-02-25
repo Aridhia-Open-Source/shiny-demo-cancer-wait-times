@@ -3,7 +3,7 @@
 server <- function(input, output, session) {
   
   names(xl_sheets) <- list.files("./datafiles/")
-  dfs <- reactiveValues(merged = 0, by_area = 0, regions = 0)
+  dfs <- reactiveValues(merged = 0, by_area = 0, regions = 0, quarts = 0, types_of_canc = 0)
   
   b <- leaflet(options = leafletOptions(minZoom = 5.6, maxZoom = 5.6)) %>%
     addTiles() %>%
@@ -15,35 +15,6 @@ server <- function(input, output, session) {
                 highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE))
   
   output$map <- renderLeaflet(b)
-  
-  # plot_render <- reactive({
-  #   list_of_sheets <- names(xl_sheets) %>%
-  #     map(~paste0("./datafiles/", .x))%>%
-  #     map(~read_rm_sheet(.x,input$sheet))%>% 
-  #     map(add_ons_id)
-  #   
-  #   merged <- do.call('rbind', list_of_sheets)
-  #   merged[is.na(merged)] = "N/A"
-  #   dfs$merged <- merged
-  #   dfs$by_area <- NULL
-  #   
-  #   areas <- merged[[1]] %>%
-  #     unique()
-  #   
-  #   names(areas) <- c('West Midlands', 'South East Coast', 'London', 'North West', 'South Central', 'North East', 
-  #                     'Yorkshire and the Humber', 'East Midlands', 'East of England', 'South West', 'N/A')
-  #   dfs$regions <- areas
-  #   
-  #   time_quarters <- merged$time_period %>%
-  #     unique()
-  #   
-  #   updateSelectizeInput(session, 'regions', choices = names(areas))
-  #   updateSelectizeInput(session, 'quarter', choices = time_quarters)
-  #   
-  #   merged
-  # })
-  # 
-  # output$sheet <- DT::renderDataTable(plot_render(), options = list( targets = '_all'))
   
   observeEvent(input$sheet,{
     
@@ -76,9 +47,11 @@ server <- function(input, output, session) {
 
       time_quarters <- merged$time_period %>%
         unique()
-
+      
+      dfs$quarts <- time_quarters
+      
       updateSelectizeInput(session, 'regions', choices = names(areas))
-      updateSelectizeInput(session, 'quarter', choices = time_quarters)
+      updateSelectizeInput(session, 'quarter', choices = dfs$quarts)
 
       output$sheet <- DT::renderDataTable(merged,options = list( targets = '_all'))
 
@@ -102,16 +75,19 @@ server <- function(input, output, session) {
         palette = "YlGnBu",
         domain = min : max
       )
+      
+      legend_title <- str_replace_all(percentage_name,'_',' ') %>%
+        str_replace_all(., 'percentage', '%')
 
       b <- leaflet(options = leafletOptions(minZoom = 5.6, maxZoom = 5.6)) %>%
         addTiles() %>%
         addPolygons(data = map_gsdf,
                     layerId= map_gsdf$scn16cd,
                     color = ~pal(averages), weight = 1, smoothFactor = 0.5,
-                    popup = paste0("<b>",map_gsdf$scn16nm,"<br></b>", "<b>", percentage_name, " %", ":</b><br>",map_gsdf$average, "</b>"),
+                    popup = paste0("<b>",map_gsdf$scn16nm,"<br></b>", map_gsdf$average, "%"),
                     opacity = 1.0, fillOpacity = 0.7,
                     highlightOptions = highlightOptions(color = "yellow", weight = 2, bringToFront = TRUE)) %>%
-        addLegend( "bottomright", pal = pal, values = averages, title = "% of patients seen", labFormat = labelFormat(suffix = "%"),
+        addLegend( "bottomright", pal = pal, values = averages, title = legend_title, labFormat = labelFormat(suffix = "%"),
                    opacity = 1
           
         )
@@ -119,12 +95,15 @@ server <- function(input, output, session) {
       output$map <- renderLeaflet(b)
       
       
-      # if (grepl("BY CANCER", input$sheet)){
-      #   cancer_field <- names(merged)[[match('total',names(merged)) - 1]]
-      #   cancer_types <- merged[[cancer_field]] %>%
-      #     unique()
-      #   updateSelectizeInput(session, 'cancerType', choices = cancer_types)
-      # }
+      if (grepl("BY CANCER", input$sheet)){
+        cancer_field <- names(merged)[[match('total',names(merged)) - 1]]
+        cancer_types <- merged[[cancer_field]] %>%
+          unique()
+        
+        dfs$types_of_canc <- cancer_types
+        
+        updateSelectizeInput(session, 'cancerType', choices = dfs$types_of_canc)
+      }
       }
   })
   
@@ -140,9 +119,46 @@ server <- function(input, output, session) {
       
       updateSelectizeInput(session, 'quarter', choices = time_quarters)
       
+      if (grepl("BY CANCER", input$sheet)){
+        updateSelectizeInput(session, 'cancerType', choices = dfs$types_of_canc)
+      }
+      
       output$sheet <- DT::renderDataTable(tmp, options = list( targets = '_all'))
       
       output$plot <- renderPlot(plots(tmp))
+    }
+  })
+  
+  observeEvent(input$cancerType,{
+    
+    if (input$cancerType != ""){
+      
+      if (is.null(dfs$by_area)){
+        
+        if (input$quarter != ""){
+          tmp <- dfs$merged[which(dfs$merged[['suspected_type_of_cancer']] == input$cancerType),] %>%
+            .[which(.[['time_period']] == input$quarter),]
+        }
+        else{
+          tmp <- dfs$merged[which(dfs$merged[['suspected_type_of_cancer']] == input$cancerType),]
+        }
+        
+        output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
+      }
+      else{
+        if (input$quarter != ""){
+          tmp <- dfs$by_area[which(dfs$by_area[['suspected_type_of_cancer']] == input$cancerType),] %>%
+            .[which(.[['time_period']] == input$quarter),]
+        }
+        else{
+          tmp <- dfs$by_area[which(dfs$by_area[['suspected_type_of_cancer']] == input$cancerType),]
+        }
+        
+        output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
+        
+        output$plot <- renderPlot(plots(tmp))
+      }
+      
     }
   })
   
@@ -151,12 +167,25 @@ server <- function(input, output, session) {
     if (input$quarter != ""){
       
       if (is.null(dfs$by_area)){
-        tmp <- dfs$merged[which(dfs$merged[['time_period']] == input$quarter),]
+        
+        if (input$cancerType != ""){
+          tmp <- dfs$merged[which(dfs$merged[['suspected_type_of_cancer']] == input$cancerType),] %>%
+            .[which(.[['time_period']] == input$quarter),]
+        }
+        else{
+          tmp <- dfs$merged[which(dfs$merged[['time_period']] == input$quarter),]
+        }
         
         output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
       }
       else{
-        tmp <- dfs$by_area[which(dfs$by_area[['time_period']] == input$quarter),]
+        if (input$cancerType != ""){
+          tmp <- dfs$by_area[which(dfs$by_area[['suspected_type_of_cancer']] == input$cancerType),] %>%
+            .[which(.[['time_period']] == input$quarter),]
+        }
+        else{
+          tmp <- dfs$by_area[which(dfs$by_area[['time_period']] == input$quarter),]
+        }
         
         output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
         
@@ -164,16 +193,4 @@ server <- function(input, output, session) {
       }
     }
   })
-  
-  # observeEvent(input$cancerType,{
-  #   if (input$cancerType != ""){
-  #     if (is.null(dfs$by_area)){
-  #       tmp <- dfs$merged[which(dfs$merged[['time_period']] == input$quarter),]
-  # 
-  #       output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
-  #     }
-  #     else{}
-  # 
-  #   }
-  # })
 }

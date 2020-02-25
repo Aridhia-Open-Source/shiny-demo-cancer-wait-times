@@ -13,11 +13,11 @@ ui <- fluidPage(
         condition = "input.sheet != ''",
         selectizeInput('regions','Regions',choices = NULL, options = list(placeholder = 'select region', onInitialize = I('function() { this.setValue(""); }'))),
         
-        # conditionalPanel(
-        #   condition = "input.sheet.includes('BY CANCER')",
-        #   selectizeInput('cancerType','Cancer Type',choices = NULL, options = list(placeholder = 'select cancer type', onInitialize = I('function() { this.setValue(""); }')))
-        #   
-        # ),
+        conditionalPanel(
+          condition = "input.sheet.includes('BY CANCER')",
+          selectizeInput('cancerType','Cancer Type',choices = NULL, options = list(placeholder = 'select cancer type', onInitialize = I('function() { this.setValue(""); }')))
+
+        ),
         
         selectizeInput('quarter','Quarter',choices = NULL, options = list(placeholder = 'select quarter', onInitialize = I('function() { this.setValue(""); }')))
       )
