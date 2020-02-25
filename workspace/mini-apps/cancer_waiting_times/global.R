@@ -133,6 +133,23 @@ read_rm_sheet <- function(file, sheet) {
   return(df)
 }
 
+plots <- function(tmp){
+  percentage_name <- names(tmp)[[match('total',names(tmp)) + 3]]
+  nat_avg <- (sum(tmp[[which(names(tmp)=='total')+1]]) / sum(tmp$total)) * 100
+  
+  average_diff <- tmp %>%
+    group_by(ods_code) %>%
+    summarise(average_time = mean(.data[[percentage_name]])) %>%
+    mutate (difference = average_time - nat_avg)
+  
+  p <- ggplot(data = average_diff, aes(x = ods_code , y =difference)) + 
+    geom_col(aes(fill = difference)) +
+    scale_fill_gradient2(low = "red",
+                         high = "green",
+                         midpoint = median(average_diff$difference))
+  
+  return(p)
+}
 
 q1_file <- "./datafiles/Q1-2015-2016-CANCER-WAITING-TIMES-PROVIDER-WORKBOOK.xlsx"
 q1_sheets <- tidyxl::xlsx_sheet_names(q1_file)[-1]
