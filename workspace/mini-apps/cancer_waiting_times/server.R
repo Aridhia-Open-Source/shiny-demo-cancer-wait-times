@@ -21,8 +21,8 @@ server <- function(input, output, session) {
     if (input$sheet != ""){
       
       list_of_sheets <- names(xl_sheets) %>%
-        map(~paste0("./datafiles/", .x))%>%
-        map(~read_rm_sheet(.x,input$sheet))%>%
+        map(~paste0("./datafiles/", .))%>%
+        map(~read_rm_sheet(., input$sheet))%>%
         map(add_ons_id)
 
       merged <- do.call('rbind', list_of_sheets)
@@ -136,22 +136,22 @@ server <- function(input, output, session) {
       if (is.null(dfs$by_area)){
         
         if (input$quarter != ""){
-          tmp <- dfs$merged[which(dfs$merged[['suspected_type_of_cancer']] == input$cancerType),] %>%
+          tmp <- dfs$merged[which(dfs$merged[[match('total',names(dfs$merged)) - 1]] == input$cancerType),] %>%
             .[which(.[['time_period']] == input$quarter),]
         }
         else{
-          tmp <- dfs$merged[which(dfs$merged[['suspected_type_of_cancer']] == input$cancerType),]
+          tmp <- dfs$merged[which(dfs$merged[[match('total',names(dfs$merged)) - 1]] == input$cancerType),]
         }
         
         output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
       }
       else{
         if (input$quarter != ""){
-          tmp <- dfs$by_area[which(dfs$by_area[['suspected_type_of_cancer']] == input$cancerType),] %>%
+          tmp <- dfs$by_area[which(dfs$by_area[[match('total',names(dfs$by_area)) - 1]] == input$cancerType),] %>%
             .[which(.[['time_period']] == input$quarter),]
         }
         else{
-          tmp <- dfs$by_area[which(dfs$by_area[['suspected_type_of_cancer']] == input$cancerType),]
+          tmp <- dfs$by_area[which(dfs$by_area[[match('total',names(dfs$by_area)) - 1]] == input$cancerType),]
         }
         
         output$sheet <- DT::renderDataTable(tmp,options = list( targets = '_all'))
@@ -169,7 +169,7 @@ server <- function(input, output, session) {
       if (is.null(dfs$by_area)){
         
         if (input$cancerType != ""){
-          tmp <- dfs$merged[which(dfs$merged[['suspected_type_of_cancer']] == input$cancerType),] %>%
+          tmp <- dfs$merged[which(dfs$merged[[match('total',names(dfs$merged)) - 1]] == input$cancerType),] %>%
             .[which(.[['time_period']] == input$quarter),]
         }
         else{
@@ -180,7 +180,7 @@ server <- function(input, output, session) {
       }
       else{
         if (input$cancerType != ""){
-          tmp <- dfs$by_area[which(dfs$by_area[['suspected_type_of_cancer']] == input$cancerType),] %>%
+          tmp <- dfs$by_area[which(dfs$by_area[[match('total',names(dfs$by_area)) - 1]] == input$cancerType),] %>%
             .[which(.[['time_period']] == input$quarter),]
         }
         else{
