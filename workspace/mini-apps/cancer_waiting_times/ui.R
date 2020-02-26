@@ -28,12 +28,12 @@ ui <- fluidPage(
     fluidRow(
       column(
         tabsetPanel(type = "tabs",
-                    tabPanel("Plot", plotOutput("plot")),
-                    tabPanel("Map", leafletOutput("map"))
+                    tabPanel("Plot", plotOutput(outputId = "plot", width = "850px")),
+                    tabPanel("Map", leafletOutput(outputId = "map",  width = "850px"))
         ), width = 5
       ),
       column(
-        div(DT::dataTableOutput('sheet'), style = "font-size: 80%") , width = 5)
+        div(DT::dataTableOutput('sheet'), style = "font-size: 80%") , width = 3)
     )
   )
 )
