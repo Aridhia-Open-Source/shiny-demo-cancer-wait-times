@@ -4,6 +4,7 @@
 ui <- fluidPage(
   # Application title
   titlePanel("Cancer Waiting Times Stats"),
+  includeCSS("www/styles.css"),
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
