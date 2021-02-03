@@ -1,12 +1,14 @@
-#source("global.R")
+################
+###### UI ######
+################
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
   # Application title
   titlePanel("Cancer Waiting Times Stats"),
+  # Style
   includeCSS("www/styles.css"),
   
-  # Sidebar with a slider input for number of bins 
+  ### Side Bar ###
   sidebarLayout(
     sidebarPanel(
       selectizeInput("sheet", "Sheets", choices = xl_sheets[[1]][-1],
@@ -24,18 +26,21 @@ ui <- fluidPage(
       ),
       htmlOutput("national_avg")
     ),
+    ### End of Side Bar ###
     
-    # Show a plot of the generated distribution
+    ### Main Panel ###
     fluidRow(
       column(
         tabsetPanel(type = "tabs",
                     tabPanel("Plot", plotOutput(outputId = "plot", width = "850px")),
-                    tabPanel("Map", leafletOutput(outputId = "map",  width = "850px"))
+                    tabPanel("Map", leafletOutput(outputId = "map",  width = "850px")),
+                    documentation_tab()
         ), width = 5
       ),
       column(width = 3,
         div(DT::dataTableOutput("sheet"), style = "font-size: 80%")
       )
     )
+    ### End of Main Panel ###
   )
 )
