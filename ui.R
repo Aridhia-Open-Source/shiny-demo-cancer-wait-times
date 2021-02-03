@@ -4,7 +4,7 @@
 
 ui <- fluidPage(
   # Application title
-  titlePanel("Cancer Waiting Times Stats"),
+  titlePanel("Cancer Waiting Times"),
   # Style
   includeCSS("www/styles.css"),
   
@@ -30,12 +30,12 @@ ui <- fluidPage(
     
     ### Main Panel ###
     fluidRow(
-      column(
+      column(width = 5,
         tabsetPanel(type = "tabs",
                     tabPanel("Plot", plotOutput(outputId = "plot", width = "850px")),
                     tabPanel("Map", leafletOutput(outputId = "map",  width = "850px")),
                     documentation_tab()
-        ), width = 5
+        )
       ),
       column(width = 3,
         div(DT::dataTableOutput("sheet"), style = "font-size: 80%")
