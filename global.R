@@ -1,4 +1,9 @@
+####################
+###### GLOBAL ######
+####################
 
+
+# Load libraries
 library(shiny)
 library(tidyverse)
 library(DT)
@@ -9,6 +14,10 @@ library(leaflet)
 library(sf)
 library(rmapshaper)
 
+# source help tab
+source("./help_tab.R")
+
+# List of the excel files and all its sheets
 xl_sheets <- list.files("datafiles/") %>%
   map(~paste0("datafiles/", .x)) %>%
   map(~excel_sheets(.x))
