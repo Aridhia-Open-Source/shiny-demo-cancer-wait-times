@@ -9,8 +9,8 @@ documentation_tab <- function() {
                        h4("How to use the mini-app"),
                        p("The app will open in the 'Plot' tab, here: "),
                        tags$ol(
-                         tags$li("Select the sheet you want to visualise on the drop-down menu on the right-side. A table with all the data will appear in the
-                                 bottom of the screen"),
+                         tags$li("Select the sheet you wish to visualise using the drop-down menu on the right-side. A table displaying the 
+                                 data will appear in the bottom of the screen."),
                          tags$li("Choose the region. A graph showing the differences of the % treated within your range between national average and regional 
                                  providers will appear in the main panel; and the table below will update to show the data only for the selected region."),
                          tags$li("If you want, you can further filter the data in the plot and table by choosing a cancer type and a quarter.")
