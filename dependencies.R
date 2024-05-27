@@ -13,7 +13,7 @@ package_install <- function(x, ...) {
 
 # Source this script to install all the libraries needed for the app
 
-packages <- c("shiny", "tidyverse", "DT", "tidyxl", "readxl", "rgdal", "leaflet", "sf", "rmapshaper")
+packages <- c("shiny", "tidyverse", "DT", "tidyxl", "readxl", "leaflet", "sf", "rmapshaper")
 
 package_install(packages)
 

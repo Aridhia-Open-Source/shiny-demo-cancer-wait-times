@@ -9,7 +9,6 @@ library(tidyverse)
 library(DT)
 library(tidyxl)
 library(readxl)
-library(rgdal)
 library(leaflet)
 library(sf)
 library(rmapshaper)
@@ -22,12 +21,10 @@ xl_sheets <- list.files("datafiles/") %>%
   map(~paste0("datafiles/", .x)) %>%
   map(~excel_sheets(.x))
 
-map_gsdf <- readOGR( 
+map_gsdf <- st_read( 
   dsn = "map_data/Strategic_Clinical_Networks_December_2016_Full_Clipped_Boundaries_in_England(simplified).shp", 
-  layer = "Strategic_Clinical_Networks_December_2016_Full_Clipped_Boundaries_in_England(simplified)",
-  GDAL1_integer64_policy = TRUE
-) %>% 
-  spTransform(., CRS("+proj=longlat +datum=WGS84 +no_defs"))
+  layer = "Strategic_Clinical_Networks_December_2016_Full_Clipped_Boundaries_in_England(simplified)"
+) 
 
 get_row_ranges <- function(file, sheet) {
   col <- read_excel(file, sheet, col_names = FALSE) %>% pull(2)
