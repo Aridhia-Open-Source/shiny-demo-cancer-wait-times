@@ -22,7 +22,7 @@ The 'Map' tab displays an interactive map showing the average waiting times for 
 You can clone this repository by using the command:
 
 ```
-git clone https://github.com/aridhia/demo-cancer-wait-times
+git clone https://github.com/Aridhia-Open-Source/shiny-demo-cancer-wait-times
 ```
 
 Open the .Rproj file in RStudio and use `runApp()` to start the app.
