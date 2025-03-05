@@ -13,7 +13,10 @@ package_install <- function(x, ...) {
 
 # Source this script to install all the libraries needed for the app
 
-packages <- c("shiny", "tidyverse", "DT", "tidyxl", "readxl", "leaflet", "sf", "rmapshaper")
+packages <- c("shiny", "tidyverse", "V8", "DT", "tidyxl", "readxl", "leaflet", "sf", "rmapshaper")
+
+Sys.unsetenv("DOWNLOAD_STATIC_LIBV8")
+Sys.setenv(DISABLE_STATIC_LIBV8=1)
 
 package_install(packages)
 
