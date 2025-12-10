@@ -1,13 +1,13 @@
 # CANCER WAIT TIMES
 
-This RShiny mini-app offers a quick visualisation of the Cancer Waiting Times of the England NHS. Within the UK, there are targets for maximum waiting times to start treatment after being diagnosed with cancer. The waiting time target to start treatment after diagnosis in England is no more than 2 months (day) between the date the hospital recieved an urgen referral for suspected cancer and the start of the treatment.
+This R web app offers a quick visualisation of the Cancer Waiting Times of the England NHS. Within the UK, there are targets for maximum waiting times to start treatment after being diagnosed with cancer. The waiting time target to start treatment after diagnosis in England is no more than 2 months (day) between the date the hospital recieved an urgen referral for suspected cancer and the start of the treatment.
 
 Cancer Waiting Times standards monitor the lenght of time that patients with cancer or suspected cancer wait to be seen and treated in England. All cancer waiting times are monitored thorugh the *National Cancer Waiting Times Monitoring Dataset (NCWTMDS)*, which is an information standard applicable to all cancer services providers funded by the NHS in England. The official monthly and quaterly repors can be found here:
 
 http://www.england.nhs.uk/statistics/statistical-work-areas/cancer-waiting-times/
 
 
-## About the Cancer Wait Times RShiny mini-app
+## About the Cancer Wait Times R web app
 
 The app will open in the 'Plot' tab, here:
 
@@ -30,7 +30,7 @@ Open the .Rproj file in RStudio and use `runApp()` to start the app.
 ### Deploying to the workspace
 
 1. Download this GitHub repo as a .zip file.
-2. Create a new blank Shiny app in your workspace called "cancer-wait-times".
+2. Create a new blank R web app in your workspace called "cancer-wait-times".
 3. Navigate to the `cancer-wait-times` folder under "files".
 4. Delete the `app.R` file from the `cancer-wait-times` folder. Make sure you keep the `.version` file!
 5. Upload the .zip file to the `cancer-wait-times` folder.
